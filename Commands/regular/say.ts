@@ -1,6 +1,7 @@
 import { Commands } from "../../typings/classes";
 import Discord from "discord.js";
 import handleError from "../../Function/handleError";
+import handleRestError from "../../Function/handleRestError";
 
 export default {
     name: "say",
@@ -29,8 +30,10 @@ export default {
                     "You need to specify a channel id with -c <channelId>!"
                 );
 
+            let snowflake = args[args.indexOf("-c") + 1];
+
             client.channels
-                .fetch(args[args.indexOf("-c") + 1])
+                .fetch(snowflake)
                 .then((v) => {
                     if (!v) {
                         message.channel
@@ -55,14 +58,30 @@ export default {
                             return;
                         }
 
+                        // remove `-c <snowflake>`
                         args.splice(args.indexOf("-c"), 2);
+
+                        let messageReference:
+                            | undefined
+                            | { messageReference: string } = undefined;
+                        if (args.includes("-r")) {
+                            messageReference = {
+                                messageReference: args[args.indexOf("-r") + 1],
+                            };
+                            args.splice(args.indexOf("-r"), 2);
+                        }
+
                         if (args.length === 0) {
                             message.channel
                                 .send("You can't send a empty message")
                                 .catch(handleError);
                             return;
                         }
-                        v.send(args.join(" ")).catch(handleError);
+
+                        v.send({
+                            content: args.join(" "),
+                            reply: messageReference,
+                        }).catch((e) => handleRestError(e, message));
                     }
                 })
                 .catch(handleError);
