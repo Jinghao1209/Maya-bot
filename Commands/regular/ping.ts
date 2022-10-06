@@ -7,6 +7,7 @@ export default {
     category: "REGULAR",
     options: [],
     permission: "SendMessages",
+    usage: "",
     listener: (client, message, args) => {
         message.reply("Pong! at " + (Date.now() - message.createdTimestamp) + "ms");
     }

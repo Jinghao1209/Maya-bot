@@ -7,17 +7,18 @@ export type CommandCategory = "ADMIN" | "PERSONAL" | "REGULAR" | "SONG";
 
 export interface Commands {
     /** @warn 不要有空格和特殊字符 */
-    name: string;
-    description: string;
-    type: CommandType[];
     category: CommandCategory;
-    options: Discord.ApplicationCommandOption[];
-    permission: Discord.PermissionsString;
+    description: string;
     listener: (
         client: Client,
         message: Discord.Message | Discord.CommandInteraction,
         args: string[]
-    ) => void;
+    ) => Promise<void> | void;
+    name: string;
+    options: Discord.ApplicationCommandOption[];
+    permission: Discord.PermissionsString;
+    type: CommandType[];
+    usage: string; // try to live with []help
 }
 
 export interface Events<K extends keyof Discord.ClientEvents> {

@@ -8,14 +8,15 @@ export default {
     type: ["TEXT", "VOICE"],
     category: "PERSONAL",
     options: [],
-    permission: "AddReactions",
+    permission: "EmbedLinks",
+    usage: "<JSON[label|style|text]>",
     listener: (client, message, args) => {
         let channel = message.channel;
         if (!channel) return console.log("channel not found");
         if (!(message instanceof Discord.Message))
             return message.reply({
                 content: "THIS IS NOT A MESSAGE",
-            });
+            }).catch(handleError);
 
         let json_text = message.content.split(/ +/);
         json_text.shift();
@@ -28,13 +29,13 @@ export default {
                 new Discord.ButtonBuilder()
                     .setCustomId("invalid_button")
                     .setStyle(json.style ?? Discord.ButtonStyle.Primary)
-                    .setLabel(json.label ?? "this is a default label")
+                    .setLabel(json.label ?? "***NULL LABEL***")
             ) as any;
 
             message.reply({
                 content: json.text ?? "",
                 components: [row],
-            });
+            }).catch(handleError);
 
             console.log(json);
         } catch (e) {

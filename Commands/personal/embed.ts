@@ -8,7 +8,8 @@ export default {
     type: ["TEXT", "VOICE"],
     category: "PERSONAL",
     options: [],
-    permission: "AddReactions",
+    permission: "EmbedLinks",
+    usage: "<JSON[color|content|text|title]>",
     listener: (client, message, args) => {
         let channel = message.channel;
         if (!channel) return console.log("channel not found");

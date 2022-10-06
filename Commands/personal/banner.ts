@@ -9,6 +9,7 @@ export default {
     category: "PERSONAL",
     options: [],
     permission: "SendMessages",
+    usage: "{mentions|clientId}",
     listener: async (client, message, args) => {
         let channel = message.channel,
             guild = message.guild;
@@ -28,21 +29,21 @@ export default {
 
         let user = await client.users.fetch(mentionUser, { force: true });
 
-        console.log(user.banner);
-        console.log(user.hexAccentColor);
-
         let embed = new Discord.EmbedBuilder()
-            .setAuthor({ name: user.tag, iconURL: user.avatarURL() ?? undefined})
+            .setAuthor({
+                name: user.tag,
+                iconURL: user.avatarURL() ?? undefined,
+            })
             .setImage(user.bannerURL() ?? null)
             .setFields({
                 name: "AccentColor",
-                value: user.hexAccentColor ?? "***AccentColor NULL***"
+                value: user.hexAccentColor ?? "***AccentColor NULL***",
             })
-            .setColor(user.hexAccentColor ?? "Red")
+            .setColor(user.hexAccentColor ?? "Red");
 
         message.channel.send(
             // `Banner: ${user.banner}\nAccentColor: ${user.hexAccentColor}`
-            {embeds: [embed]}
+            { embeds: [embed] }
         );
     },
 } as Commands;
