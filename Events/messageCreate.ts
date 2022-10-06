@@ -9,6 +9,10 @@ import Discord from "discord.js";
 export default {
     eventName: "messageCreate",
     listener: (client, message) => {
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+            console.log(`${message.guild?.name} | ${message.channel.name} % ${message.author.tag}:\n${message.content}`);
+        }
+
         if (message.author.bot) return;
 
         if (message.content.startsWith(client.commandPrefix)) {
@@ -19,7 +23,8 @@ export default {
             const commandLine = getCommand(
                 client,
                 commandName,
-                message.member
+                message.member,
+                message.channel.type
             );
 
             if (commandLine === 1) {
@@ -68,7 +73,8 @@ export default {
 function getCommand(
     client: Client,
     commandName: string,
-    member: Discord.GuildMember | null
+    member: Discord.GuildMember | null,
+    type: Discord.ChannelType
 ) {
     const commandLine = client.commands
         .filter((cmd) => cmd.name === commandName)
@@ -85,7 +91,7 @@ function getCommand(
     }
 
     const permission = member?.permissions.has(commandLine.permission, true);
-    if (!permission) return 2;
+    if (!permission && type !== Discord.ChannelType.DM) return 2;
 
     return commandLine;
 }
