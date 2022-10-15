@@ -18,15 +18,43 @@ export default {
                 content: "THIS IS NOT A MESSAGE",
             });
 
-        let embed = new Discord.EmbedBuilder().addFields(
-            client.commands
-                .map((command) => ({
-                    name: `[${command.category}] ${command.name}`,
-                    value: `${command.name} ${command.usage}\n***description***: ${command.description}`,
-                }))
-                .sort()
-        )
-            .setAuthor({ name: message.author.tag, iconURL: message.author.avatarURL() ?? undefined})
+        if (args[1]) {
+            const cmd = client.commands.find((c) => c.name === args[1]);
+            if (cmd == undefined)
+                return message.channel
+                    .send(`Command ***[]${args[1]}*** not found!`)
+                    .catch(handleError);
+
+            message.channel
+                .send({
+                    embeds: [
+                        new Discord.EmbedBuilder()
+                            .setColor("#f2b2dc")
+                            .setTitle(
+                                `${cmd.name}: ${cmd.description}`.toUpperCase()
+                            )
+                            .setDescription(
+                                `**CATEGORY**: ${cmd.category}\n**PERMISSION REQUIRED**: ${cmd.permission}\n**USAGE**: ${cmd.name} ${cmd.usage}`
+                            ),
+                    ],
+                })
+                .catch(handleError);
+            return;
+        }
+
+        let embed = new Discord.EmbedBuilder()
+            .addFields(
+                client.commands
+                    .map((command) => ({
+                        name: `[${command.category}] ${command.name}`,
+                        value: `${command.name} ${command.usage}\n***description***: ${command.description}\n **permission required**: ${command.permission}`,
+                    }))
+                    .sort()
+            )
+            .setAuthor({
+                name: message.author.tag,
+                iconURL: message.author.avatarURL() ?? undefined,
+            })
             .setColor(message.author.hexAccentColor ?? "#f2b2dc");
 
         message.reply({ embeds: [embed] }).catch(handleError);

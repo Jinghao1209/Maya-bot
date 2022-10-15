@@ -16,9 +16,11 @@ export default {
         if (!channel || !guild)
             return console.log("channel or guild not found");
         if (!(message instanceof Discord.Message))
-            return message.reply({
-                content: "THIS IS NOT A MESSAGE",
-            });
+            return message
+                .reply({
+                    content: "THIS IS NOT A MESSAGE",
+                })
+                .catch(handleError);
 
         let mentionUser =
             message.mentions.users.first() || guild.members.cache.get(args[0]);
@@ -41,9 +43,6 @@ export default {
             })
             .setColor(user.hexAccentColor ?? "Red");
 
-        message.channel.send(
-            // `Banner: ${user.banner}\nAccentColor: ${user.hexAccentColor}`
-            { embeds: [embed] }
-        );
+        message.channel.send({ embeds: [embed] });
     },
 } as Commands;

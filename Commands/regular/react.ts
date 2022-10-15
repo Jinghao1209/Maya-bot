@@ -2,6 +2,7 @@ import Discord from "discord.js";
 import axios from "axios";
 import handleError from "../../Function/handleError";
 import { Commands } from "../../typings/classes";
+import handleRestError from "../../Function/handleRestError";
 
 export default {
     name: "react",
@@ -105,16 +106,3 @@ export default {
         });
     },
 } as Commands;
-
-function handleRestError(e: any, message: Discord.Message) {
-    let embed = new Discord.EmbedBuilder()
-        .setColor("Red")
-        .setTitle(`ERROR: ${e.code}`)
-        .setDescription("Errors:")
-        .setFields({
-            name: `\`${e.code}\``,
-            value: `***${e.message}***`,
-        });
-
-    message.author.send({ embeds: [embed] }).catch(handleError);
-}
