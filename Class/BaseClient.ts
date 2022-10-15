@@ -8,6 +8,7 @@ import {
     Events,
 } from "../typings/classes";
 import Client from "./Client";
+import Logger from "./Logger";
 
 // all intents
 // const intents = new Discord.Intents(32767);
@@ -16,7 +17,7 @@ const gateway = [
     Discord.GatewayIntentBits.GuildMessages,
     Discord.GatewayIntentBits.MessageContent,
     Discord.GatewayIntentBits.GuildMembers,
-    Discord.GatewayIntentBits.DirectMessages
+    Discord.GatewayIntentBits.DirectMessages,
 ];
 
 export default class BaseClient extends Discord.Client {
@@ -33,11 +34,10 @@ export default class BaseClient extends Discord.Client {
         };
     };
     public commandPrefix: CommandPrefix;
+    public logger: Logger;
 
     constructor() {
-        super({ intents: gateway, partials: [
-            Discord.Partials.Channel
-        ] });
+        super({ intents: gateway, partials: [Discord.Partials.Channel] });
 
         this.events = [];
         this.functions = {
@@ -53,6 +53,8 @@ export default class BaseClient extends Discord.Client {
         //     REGULAR: [],
         //     SONG: [],
         // }]
+
+        this.logger = new Logger();
     }
 
     public addAllListeners(client: Client) {

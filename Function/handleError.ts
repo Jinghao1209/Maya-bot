@@ -1,5 +1,7 @@
+import { logger } from "../Constant";
+
 export default function handleError(e: any) {
     let error = new Error(e);
 
-    console.log(`Error: ${error.message}`);
+    logger.error(`Error: ${error.message}`);
 }
