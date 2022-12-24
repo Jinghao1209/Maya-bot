@@ -274,6 +274,11 @@ node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
+pass.code.js@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/pass.code.js/-/pass.code.js-1.5.3.tgz#b99f6406f83c53c6b317f1d964bbc1f3e3aee3ca"
+  integrity sha512-aY3B1pmsByR0aDtfO1sjE3FAVxkImQ30OxrhYn+WKHCCb4C0IDMHULTPE3q3inHu2ed1pXNLXh+cwPzY8SpmJQ==
+
 peek-readable@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/peek-readable/-/peek-readable-5.0.0.tgz#7ead2aff25dc40458c60347ea76cfdfd63efdfec"
