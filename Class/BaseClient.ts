@@ -7,11 +7,11 @@ import {
     Commands,
     Events,
 } from "../typings/classes";
+import { BaseClientOptions } from "../typings/client";
 import Client from "./Client";
 import Logger from "./Logger";
 
 // all intents
-// const intents = new Discord.Intents(32767);
 const gateway = [
     Discord.GatewayIntentBits.Guilds,
     Discord.GatewayIntentBits.GuildMessages,
@@ -25,9 +25,6 @@ export default class BaseClient extends Discord.Client {
     public events: string[];
     /** @comments commands name */
     public commands: Commands[];
-    // public commands: {
-    //     [key in CommandCategory]: Commands[];
-    // };
     public functions: {
         command: {
             length: number;
@@ -35,8 +32,10 @@ export default class BaseClient extends Discord.Client {
     };
     public commandPrefix: CommandPrefix;
     public logger: Logger;
+    public characters: string;
+    public requireLog: boolean;
 
-    constructor() {
+    constructor(options: BaseClientOptions) {
         super({ intents: gateway, partials: [Discord.Partials.Channel] });
 
         this.events = [];
@@ -47,14 +46,13 @@ export default class BaseClient extends Discord.Client {
         };
         this.commandPrefix = "[]";
         this.commands = [];
-        // this.commands = [{
-        //     ADMIN: [],
-        //     PERSONAL: [],
-        //     REGULAR: [],
-        //     SONG: [],
-        // }]
 
         this.logger = new Logger();
+        this.requireLog = options.requireLog || false;
+        this.characters = "";
+        for (let i = 48; i <= 112; i++) {
+            this.characters += String.fromCharCode(i);
+        }
     }
 
     public addAllListeners(client: Client) {
@@ -72,25 +70,6 @@ export default class BaseClient extends Discord.Client {
     }
 
     public addAllBotStatus() {
-        // this.user?.setPresence({
-        //     activities: [
-        //         {
-        //             name: "[]help",
-        //             type: "PLAYING",
-        //         },
-        //         {
-        //             name: "[?]play default",
-        //             type: "LISTENING",
-        //             url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        //         },
-        //     ],
-        // });
-        // this.user?.setActivity({
-        //     name: "[]help",
-        //     type: "PLAYING",
-        //     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        // })
-
         this.user?.setActivity({
             name: "[]help",
             type: Discord.ActivityType.Playing,

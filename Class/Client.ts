@@ -1,12 +1,12 @@
 import BaseClient from "./BaseClient";
 import dotenv from "dotenv";
-import handleError from "../Function/handleError";
 import discord from "discord.js";
+import { BaseClientOptions } from "../typings/client";
 dotenv.config();
 
 export default class Client extends BaseClient {
-    constructor() {
-        super();
+    constructor(options: BaseClientOptions = {}) {
+        super(options);
     }
 
     public async start() {

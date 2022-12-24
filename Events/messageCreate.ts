@@ -9,59 +9,56 @@ import Discord from "discord.js";
 export default {
     eventName: "messageCreate",
     listener: (client, message) => {
-        if (message.channel.type === Discord.ChannelType.GuildText) {
-            console.log(`${message.guild?.name} | ${message.channel.name} % ${message.author.tag}:\n${message.content}`);
+        if (message.channel.type === Discord.ChannelType.GuildText && client.requireLog)
+            client.logger.onMessage(message as Discord.Message<true>);
+        if (message.author.bot) return;
+        if (!message.content.startsWith(client.commandPrefix)) return;
+
+        const command = message.content
+            .slice(client.commandPrefix.length)
+            .split(/ +/);
+        const commandName = command[0];
+        const commandLine = getCommand(
+            client,
+            commandName,
+            message.member,
+            message.channel.type
+        );
+
+        if (commandLine === 1) {
+            return message.channel.send(
+                `Command ${client.commandPrefix}${commandName} not found!`
+            );
+        } else if (commandLine === 2) {
+            return message.channel.send(
+                `You don't have permission to use this command!`
+            );
         }
 
-        if (message.author.bot) return;
-
-        if (message.content.startsWith(client.commandPrefix)) {
-            const command = message.content
-                .slice(client.commandPrefix.length)
-                .split(/ +/);
-            const commandName = command[0];
-            const commandLine = getCommand(
-                client,
-                commandName,
-                message.member,
-                message.channel.type
-            );
-
-            if (commandLine === 1) {
+        if (message.channel.type === Discord.ChannelType.GuildVoice) {
+            if (
+                commandLine.type.includes("VOICE") ||
+                commandLine.type.includes("ALL")
+            ) {
+                commandLine.listener(client, message, command);
+            } else {
                 return message.channel.send(
                     `Command ${client.commandPrefix}${commandName} not found!`
                 );
-            } else if (commandLine === 2) {
+            }
+        } else if (message.channel.type === Discord.ChannelType.DM) {
+            if (
+                commandLine.type.includes("DM") ||
+                commandLine.type.includes("ALL")
+            ) {
+                commandLine.listener(client, message, command);
+            } else {
                 return message.channel.send(
-                    `You don't have permission to use this command!`
+                    `Command ${client.commandPrefix}${commandName} not found!`
                 );
             }
-
-            if (message.channel.type === Discord.ChannelType.GuildVoice) {
-                if (
-                    commandLine.type.includes("VOICE") ||
-                    commandLine.type.includes("ALL")
-                ) {
-                    commandLine.listener(client, message, command);
-                } else {
-                    return message.channel.send(
-                        `Command ${client.commandPrefix}${commandName} not found!`
-                    );
-                }
-            } else if (message.channel.type === Discord.ChannelType.DM) {
-                if (
-                    commandLine.type.includes("DM") ||
-                    commandLine.type.includes("ALL")
-                ) {
-                    commandLine.listener(client, message, command);
-                } else {
-                    return message.channel.send(
-                        `Command ${client.commandPrefix}${commandName} not found!`
-                    );
-                }
-            } else {
-                commandLine.listener(client, message, command);
-            }
+        } else {
+            commandLine.listener(client, message, command);
         }
     },
 } as Events<"messageCreate">;
