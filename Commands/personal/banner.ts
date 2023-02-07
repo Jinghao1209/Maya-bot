@@ -23,7 +23,7 @@ export default {
                 .catch(handleError);
 
         let mentionUser =
-            message.mentions.users.first() || guild.members.cache.get(args[0]);
+            message.mentions.users.first() || guild.members.cache.get(args[1]);
         if (!mentionUser)
             return message
                 .reply("mention member not found!")
