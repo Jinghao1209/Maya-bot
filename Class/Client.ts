@@ -1,8 +1,5 @@
 import BaseClient from "./BaseClient";
-import dotenv from "dotenv";
-import discord from "discord.js";
 import { BaseClientOptions } from "../typings/client";
-dotenv.config();
 
 export default class Client extends BaseClient {
     constructor(options: BaseClientOptions = {}) {

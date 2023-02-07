@@ -3,7 +3,7 @@ import Client from "../Class/Client";
 
 export type CommandPrefix = "[]";
 export type CommandType = "TEXT" | "VOICE" | "INTERACTION" | "DM" | "ALL";
-export type CommandCategory = "ADMIN" | "PERSONAL" | "REGULAR" | "SONG";
+export type CommandCategory = "ADMIN" | "PERSONAL" | "REGULAR" | "VC" | "GAME";
 
 export interface Commands {
     /** @warn 不要有空格和特殊字符 */

@@ -1,6 +1,9 @@
 import express from "express";
 import { createServer } from "http";
+import { config } from "dotenv";
 import Client from "./Class/Client";
+
+config();
 
 const app = express();
 const server = createServer(app);
