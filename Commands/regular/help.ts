@@ -43,24 +43,27 @@ export default {
         }
 
         let embed = new Discord.EmbedBuilder()
-            .addFields(
-                client.commands
-                    .map((command) => ({
-                        name: `[${command.category}] ${command.name}`,
-                        value: `${command.name} ${command.usage}\n***description***: ${command.description}\n **permission required**: ${command.permission}`,
-                    }))
-                    .sort()
-            )
+            .addFields(client.helpCommands[client.commandCategory[0]])
+            .setTitle(client.commandCategory[0])
             .setAuthor({
                 name: message.author.tag,
                 iconURL: message.author.avatarURL() ?? undefined,
             })
             .setColor(message.author.hexAccentColor ?? "#f2b2dc");
 
-        message.reply({ embeds: [embed] }).catch(handleError);
+        let row = new Discord.ActionRowBuilder().addComponents(
+            new Discord.SelectMenuBuilder()
+                .setCustomId("help_btn_select")
+                .addOptions(
+                    client.commandCategory.map((category) => ({
+                        value: category,
+                        label: category,
+                    }))
+                )
+        ) as any;
 
-        // message
-        //     .reply("This command is not yet implemented!")
-        //     .catch(handleError);
+        message.channel
+            .send({ embeds: [embed], components: [row] })
+            .catch(handleError);
     },
 } as Commands;

@@ -14,6 +14,7 @@ export default class Client extends BaseClient {
 
         this.on("ready", async (client) => {
             this.addAllBotStatus();
+            this.initializeHelpCommand();
             await this.fetchAllGuild();
 
             console.clear();

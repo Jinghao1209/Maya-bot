@@ -25,6 +25,10 @@ export default class BaseClient extends Discord.Client {
     public events: string[];
     /** @comments commands name */
     public commands: Commands[];
+    public commandCategory: CommandCategory[];
+    public helpCommands: {
+        [key in CommandCategory]: Discord.APIEmbedField[];
+    };
     public functions: {
         command: {
             length: number;
@@ -46,6 +50,8 @@ export default class BaseClient extends Discord.Client {
         };
         this.commandPrefix = "[]";
         this.commands = [];
+        this.commandCategory = ["REGULAR", "ADMIN", "GAME", "PERSONAL", "VC"];
+        this.helpCommands = {} as any;
 
         this.logger = new Logger();
         this.requireLog = options.requireLog || false;
@@ -94,6 +100,19 @@ export default class BaseClient extends Discord.Client {
         });
 
         return this;
+    }
+
+    public initializeHelpCommand() {
+        this.commands.map((command) => {
+            // if `tempCommand[command.category]` is undefined, initialize array for it
+            this.helpCommands[command.category] ??
+                (this.helpCommands[command.category] = []);
+
+            this.helpCommands[command.category].push({
+                name: `[]${command.name}`,
+                value: `${command.name} ${command.usage}\n***description***: ${command.description}\n **permission required**: ${command.permission}`,
+            });
+        });
     }
 
     public async fetchAllGuild() {
